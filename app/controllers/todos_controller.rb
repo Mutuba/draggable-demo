@@ -1,25 +1,20 @@
 class TodosController < ApplicationController
   before_action :set_todo, only: %i[ show edit update destroy ]
 
-  # GET /todos or /todos.json
   def index
     @todos = Todo.order(:order_priority) # Ensure sorted order
   end
 
-  # GET /todos/1 or /todos/1.json
   def show
   end
 
-  # GET /todos/new
   def new
     @todo = Todo.new
   end
 
-  # GET /todos/1/edit
   def edit
   end
 
-  # POST /todos or /todos.json
   def create
     @todo = Todo.new(todo_params)
 
@@ -40,20 +35,25 @@ class TodosController < ApplicationController
 
     todos = Todo.where(id: todos_params.pluck(:id)).index_by(&:id)
 
-    updates = []
-    todos_params.each do |todo_param|
+    updates = todos_params.map do |todo_param|
       todo = todos[todo_param[:id].to_i]
-      if todo && todo.order_priority != todo_param[:position].to_i
-        updates << { id: todo.id, order_priority: todo_param[:position] }
-      end
-    end
+      next unless todo
+
+      {
+        id: todo.id,
+        order_priority: todo_param[:position],
+        title: todo.title,
+        description: todo.description,
+        updated_at: Time.current 
+      }
+    end.compact
 
     Todo.upsert_all(updates, unique_by: :id) unless updates.empty?
 
     head :ok
   end
 
-  # PATCH/PUT /todos/1 or /todos/1.json
+
   def update
     respond_to do |format|
       if @todo.update(todo_params)
@@ -66,7 +66,6 @@ class TodosController < ApplicationController
     end
   end
 
-  # DELETE /todos/1 or /todos/1.json
   def destroy
     @todo.destroy!
 
@@ -77,13 +76,12 @@ class TodosController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_todo
-      @todo = Todo.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def todo_params
-      params.require(:todo).permit(:title, :description, :order_priority)
-    end
+  def set_todo
+    @todo = Todo.find(params[:id])
+  end
+
+  def todo_params
+    params.require(:todo).permit(:title, :description, :order_priority)
+  end
 end

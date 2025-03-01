@@ -6,9 +6,17 @@ RSpec.describe Todo, type: :model do
     subject(:todo) { build(:todo) }
 
     it "should have all columns" do
-      expect(todo).to have_db_column(:title).of_type(:string)
-      expect(todo).to have_db_column(:description).of_type(:string)
-      expect(todo).to have_db_column(:order_priority).of_type(:integer)
+      should have_db_column(:title).of_type(:string)
+      should have_db_column(:description).of_type(:string)
+      should have_db_column(:order_priority).of_type(:integer)
+    end
+  end
+
+  describe "validations" do
+    subject(:todo) { build(:todo)}
+
+    it "should validate presence of fields" do
+      should validate_presence_of(:title)
     end
   end
 

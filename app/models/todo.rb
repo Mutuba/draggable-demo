@@ -1,4 +1,6 @@
 class Todo < ApplicationRecord
+  validates :title, presence: true
+
   before_create :set_priority
 
   private
