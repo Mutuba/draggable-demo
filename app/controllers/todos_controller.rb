@@ -29,7 +29,6 @@ class TodosController < ApplicationController
     end
   end
 
-
   def sort
     todos_params = params[:todos]
 
@@ -52,7 +51,6 @@ class TodosController < ApplicationController
 
     head :ok
   end
-
 
   def update
     respond_to do |format|

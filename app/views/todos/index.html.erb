@@ -9,19 +9,16 @@
     <h1 class="font-bold text-3xl text-gray-800">Todos</h1>
     <%= link_to "New Todo", new_todo_path, class: "rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-sm transition" %>
   </div>
-<div id="todos"
-     data-controller="sortable"
-     data-sortable-url-value="<%= sort_todos_path %>"
-     data-sortable-draggable-class=".todo-item"
-     data-sortable-handle-class=".handle"
-     class="space-y-4">
+
+  <div id="todos"
+       data-controller="sortable"
+       data-sortable-url-value="<%= sort_todos_path %>"
+       class="space-y-4">
 
     <% if @todos.any? %>
       <% @todos.order(:order_priority).each do |todo| %>
         <div class="todo-item flex justify-between items-center p-4 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition"
-             data-id="<%= todo.id %>"
-             draggable="true">
-
+             data-id="<%= todo.id %>">
 
           <span class="handle cursor-move text-gray-500 pr-3">☰</span>
           <%= render todo %>
@@ -38,3 +35,4 @@
     <% end %>
   </div>
 </div>
+
